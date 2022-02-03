@@ -86,14 +86,14 @@
 	' Did the user win yet?
 	if g$ = w$ then
 		locate 0, 15
-		print "YOU WON IN"; g; "GUESSES!"
+		print "You won in"; g; "guesses!"
 		goto 10
 	end if
 
 	' Did the user lose yet?
 	if g = 6 then
 		locate 0, 15
-		print "YOU DID NOT GUESS CORRECTLY"
+		print "You did not guess correctly"
 		goto 10
 	end if
 
