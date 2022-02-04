@@ -21,8 +21,8 @@
 	r = rnd(-timer)
 
 	' Choose word
-10	open "R", #1, "WORDS.TXT", 6
-	field #1, 5 AS r$, 1 AS zz$
+10	open "R", #1, "GUESS.TXT", 5
+	field #1, 5 AS r$
 	n = lof(1)
 	r = rnd(n)
 	get #1, r
@@ -107,8 +107,8 @@
 
 	' Validate guess
 2000	m$ = ""
-	open "R", #1, "WORDS.TXT", 6
-	field #1, 5 AS r$, 1 AS zz$
+	open "R", #1, "WORDS.TXT", 5
+	field #1, 5 AS r$
 	lo = 1
 	hi = lof(1)
 2010	r = lo + int((hi - lo) / 2)
