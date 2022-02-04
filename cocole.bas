@@ -29,7 +29,7 @@
 	get #1, r
 	w$ = r$
 	close 1
-	print w$
+	'print w$
 
 	' Get guess
 	g = 1
