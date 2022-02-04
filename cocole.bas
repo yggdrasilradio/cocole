@@ -14,6 +14,7 @@
 	cls 1
 	attr 4, 0
 
+	' Title
 	locate 0, 0
 	print "COCOLe"
 
@@ -22,13 +23,13 @@
 
 	' Choose word
 10	open "R", #1, "GUESS.TXT", 5
-	field #1, 5 AS r$
+	field #1, 5 as r$
 	n = lof(1)
 	r = rnd(n)
 	get #1, r
 	w$ = r$
 	close 1
-	'print w$
+	print w$
 
 	' Get guess
 	g = 1
@@ -61,26 +62,19 @@
 	locate 10, g + 5
 	for i = 1 to 5
 		c1$ = mid$(g$, i, 1)
-		a$ = "."
+		attr 3, 0 ' grey text
 		for j = 1 to 5
 			c2$ = mid$(w$, j, 1)
 			if c2$ = c1$ and i = j then
-				a$ = "X"		
+				attr 1, 0 ' green text
 			end if
-			if a$ <> "X" and c2$ = c1$ then
-				a$ = "O"		
+			if c2$ = c1$ and i <> j then
+				attr 2, 0 ' yellow text
 			end if
 		next j
-		attr 3, 0 ' grey text
-		if a$ = "O" then
-			attr 2, 0 ' yellow text
-		end if
-		if a$ = "X" then
-			attr 1, 0 ' green text
-		end if
 		print c1$;
-		attr 4,0
 	next i
+	attr 4,0
 	print
 
 	' Did the user win yet?
@@ -108,7 +102,7 @@
 	' Validate guess
 2000	m$ = ""
 	open "R", #1, "WORDS.TXT", 5
-	field #1, 5 AS r$
+	field #1, 5 as r$
 	lo = 1
 	hi = lof(1)
 2010	r = lo + int((hi - lo) / 2)
@@ -123,9 +117,28 @@
 	if g$ < r$ then
 		hi = r '- 1
 	end if
-	'print r$;lo;hi
 	if lo <> hi then
 		goto 2010
+	end if
+	close 1
+	open "R", #1, "GUESS.TXT", 5
+	field #1, 5 as r$
+	lo = 1
+	hi = lof(1)
+2020	r = lo + int((hi - lo) / 2)
+	get #1, r
+	if g$ = r$ then
+		close 1
+		return
+	end if
+	if g$ > r$ then
+		lo = r + 1
+	end if
+	if g$ < r$ then
+		hi = r '- 1
+	end if
+	if lo <> hi then
+		goto 2020
 	end if
 	m$ = "That is not a valid word"
 	close 1

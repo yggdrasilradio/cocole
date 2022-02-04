@@ -6,7 +6,9 @@ cocole: cocole.bas
 	cp /tmp/cocole.bas redistribute
 	tr -d '\r\n' < words.txt > redistribute/words.txt
 	tr -d '\r\n' < guess.txt > redistribute/guess.txt
+	decb kill /media/share1/COCO/drive0.dsk,WORDS.TXT
 	decb copy -ra1 redistribute/words.txt /media/share1/COCO/drive0.dsk,WORDS.TXT
+	decb kill /media/share1/COCO/drive0.dsk,GUESS.TXT
 	decb copy -ra1 redistribute/guess.txt /media/share1/COCO/drive0.dsk,GUESS.TXT
 	rm -f redistribute/cocole.dsk
 	decb dskini redistribute/cocole.dsk
