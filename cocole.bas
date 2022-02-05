@@ -12,10 +12,10 @@
 	palette 11, 7	' 3 grey text
 	palette 12, 31	' 4 cyan text
 	cls 1
-	attr 4, 0
 
 	' Title
 	locate 0, 0
+	attr 4, 0
 	print "COCOLe"
 
 	' Seed the random number generator
