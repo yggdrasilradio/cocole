@@ -54,7 +54,6 @@
 	end if
 
 	' Evaluate guess
-	d$ = ""
 	locate 10, g + 5
 	for i = g to 6
 		print
@@ -100,12 +99,21 @@
 	exec &h8c1b
 
 	' Validate guess
-2000	m$ = ""
-	open "R", #1, "WORDS.TXT", 5
+2000	f$ = "GUESS.TXT"
+	gosub 3000
+	if m$ <> "" then
+		f$ = "WORDS.TXT"
+		gosub 3000
+	end if
+	return
+
+	' Binary search through word list
+3000	m$ = ""
+	open "R", #1, f$, 5
 	field #1, 5 as r$
 	lo = 1
 	hi = lof(1)
-2010	r = lo + int((hi - lo) / 2)
+3010	r = lo + int((hi - lo) / 2)
 	get #1, r
 	if g$ = r$ then
 		close 1
@@ -118,28 +126,8 @@
 		hi = r '- 1
 	end if
 	if lo <> hi then
-		goto 2010
+		goto 3010
 	end if
 	close 1
-	open "R", #1, "GUESS.TXT", 5
-	field #1, 5 as r$
-	lo = 1
-	hi = lof(1)
-2020	r = lo + int((hi - lo) / 2)
-	get #1, r
-	if g$ = r$ then
-		close 1
-		return
-	end if
-	if g$ > r$ then
-		lo = r + 1
-	end if
-	if g$ < r$ then
-		hi = r '- 1
-	end if
-	if lo <> hi then
-		goto 2020
-	end if
 	m$ = "That is not a valid word"
-	close 1
 	return
