@@ -1,5 +1,5 @@
 
-	' COCOLE Wordle clone by Rick Adams http://github.com/yggdrasilradio/cocole
+	' COCODLE Wordle clone by Rick Adams http://github.com/yggdrasilradio/cocole
 
 	' Reset machine on BREAK
 	pclear 1
@@ -23,7 +23,14 @@
 
 	' Title
 	hcolor 5 ' cyan
-	hprint (0, 0), "COCOLe"
+	hprint (0, 0), "COCOdle"
+
+	' Error line
+	' We flip palette 6 between black and cyan to show/hide this line
+	' Think of it as "disappearing ink"
+	palette 6, 0
+	hcolor 6
+	hprint (0, 4), "That is not a valid word"
 
 	' Seed the random number generator
 	r = rnd(-timer)
@@ -51,22 +58,23 @@
 60	gosub 6000
 
 	' Clear error line
-	r = 4
-	gosub 4000
+	palette 6, 0
 
 	' Validate guess
 	if len(g$) <> 5 then
-		m$ = "That is not a valid word"
+		m$ = "Invalid"
 	else
 		gosub 2000
 	end if
 	if m$ <> "" then
-		hprint (0, 4), m$
+		palette 6, 31 'cyan
 		goto 60
 	end if
 
 	' Evaluate guess
 	for i = 1 to 5
+
+		' Which color?
 		c1$ = mid$(g$, i, 1)
 		c = 4 ' grey
 		for j = 1 to 5
@@ -78,6 +86,8 @@
 				c = 3 ' yellow
 			end if
 		next j
+
+		' Draw character in grid cell
 		x = i * 2 + 13
 		y = g * 2 + 6
 		hcolor c
@@ -85,7 +95,7 @@
 		hcolor 0
 		hprint (x, y), c1$
 	next i
-	hcolor 5 ' cyan text
+	hcolor 5 ' cyan
 
 	' Did the user win yet?
 	if g$ = w$ then
@@ -97,7 +107,8 @@
 
 	' Did the user lose yet?
 	if g = 6 then
-		hprint (6, 21), "You did not guess correctly"
+		m$ = "The word was " + w$ ' 13 + 5 = 18
+		hprint (10, 21), m$
 		gosub 5000
 		goto 10
 	end if
@@ -141,11 +152,7 @@
 		goto 3010
 	end if
 	close 1
-	m$ = "That is not a valid word"
-	return
-
-	' Erase character row r
-4000	hput (0, r * 8)-(300, r * 8 + 7), 1, pset
+	m$ = "Invalid"
 	return
 
 	' Play again?
