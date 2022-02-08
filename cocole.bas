@@ -24,13 +24,6 @@
 	hcolor 5 ' cyan
 	hprint (0, 0), "COCOdle"
 
-	' Error line
-	' We flip palette 6 between black and cyan to show/hide this line
-	' Think of it as "disappearing ink"
-	palette 6, 0
-	hcolor 6
-	hprint (0, 4), "That is not a valid word"
-
 	' Seed the random number generator
 	r = rnd(-timer)
 
@@ -42,6 +35,11 @@
 	get #1, r
 	w$ = r$
 	close 1
+
+	' Alphabet guide
+	hcolor 4 ' grey
+	hprint (6, 2), "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	hcolor 5 ' cyan
 
 	' Draw word grid
 	hcolor 1
@@ -56,9 +54,6 @@
 	g = 1
 60	gosub 4000
 
-	' Clear error line
-	palette 6, 0 ' black
-
 	' Validate guess
 	if len(g$) <> 5 then
 		m$ = "Invalid"
@@ -67,8 +62,8 @@
 	end if
 	if m$ <> "" then
 
-		' Show error line
-		palette 6, 31 ' cyan
+		' Error beep
+		sound 10, 1
 		goto 60
 
 	end if
@@ -96,6 +91,16 @@
 		hline (x * 8 - 2, y * 8 - 2)-(x * 8 + 8, y * 8 + 8), pset, bf
 		hcolor 0
 		hprint (x, y), c1$
+
+		' Update alphabet guide
+		if c = 4 then
+			poke &hf015, &h21 ' Make HPRINT destructive
+			hprint (6 + asc(c1$) - asc("A"), 2), " "
+			poke &hf015, &haa ' Make HPRINT nondestructive
+		else
+			hcolor 1 ' white
+			hprint (6 + asc(c1$) - asc("A"), 2), c1$ 
+		end if
 
 	next i
 	hcolor 5 ' cyan
