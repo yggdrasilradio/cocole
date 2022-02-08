@@ -43,7 +43,7 @@
 
 	' Draw word grid
 	hcolor 1
-	for y = 8 to 18 step 2
+	for y = 7 to 17 step 2
 		for x = 15 to 23 step 2
 			hline (x * 8 - 3, y * 8 - 3)-(x * 8 + 9, y * 8 + 9), pset, b
 		next x
@@ -86,7 +86,7 @@
 
 		' Draw character in grid cell
 		x = i * 2 + 13
-		y = g * 2 + 6
+		y = g * 2 + 5
 		hcolor c
 		hline (x * 8 - 2, y * 8 - 2)-(x * 8 + 8, y * 8 + 8), pset, bf
 		hcolor 0
