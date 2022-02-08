@@ -5,6 +5,9 @@
 	pclear 1
 	on brk goto 1000
 
+	' Double speed poke
+	poke &hffd9, 0
+
 	' Init graphics
 	hscreen 2
 	palette 0, 0  	' 0 black
@@ -125,12 +128,14 @@
 	exec &h8c1b
 
 	' Validate guess
-2000	f$ = "GUESS.TXT"
+2000	poke &hffd8, 0 ' slow down CPU (who am I kidding, nobody's gonna use this with actual disk drives)
+	f$ = "GUESS.TXT"
 	gosub 3000
 	if m$ <> "" then
 		f$ = "WORDS.TXT"
 		gosub 3000
 	end if
+	poke &hffd9, 0 ' speed up CPU
 	return
 
 	' Binary search through word list
