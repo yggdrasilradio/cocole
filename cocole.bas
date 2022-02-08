@@ -38,7 +38,7 @@
 
 	' Alphabet guide
 	hcolor 4 ' grey
-	hprint (6, 2), "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	hprint (6, 3), "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 	hcolor 5 ' cyan
 
 	' Draw word grid
@@ -93,14 +93,14 @@
 		hprint (x, y), c1$
 
 		' Update alphabet guide
+		poke &hf015, &h21 ' Make HPRINT destructive
 		if c = 4 then
-			poke &hf015, &h21 ' Make HPRINT destructive
-			hprint (6 + asc(c1$) - asc("A"), 2), " "
-			poke &hf015, &haa ' Make HPRINT nondestructive
+			hprint (6 + asc(c1$) - asc("A"), 3), " "
 		else
 			hcolor 1 ' white
-			hprint (6 + asc(c1$) - asc("A"), 2), c1$ 
+			hprint (6 + asc(c1$) - asc("A"), 3), c1$ 
 		end if
+		poke &hf015, &haa ' Make HPRINT nondestructive
 
 	next i
 	hcolor 5 ' cyan
