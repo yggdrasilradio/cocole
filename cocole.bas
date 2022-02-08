@@ -87,7 +87,7 @@
 			if c2$ = c1$ and i = j then
 				c = 2 ' green
 			end if
-			if c2$ = c1$ and i <> j then
+			if c2$ = c1$ and i <> j and c <> 2 then
 				c = 3 ' yellow
 			end if
 		next j
@@ -166,8 +166,10 @@
 	' Handle string input
 4000	g$ = ""
 	poke &hf015, &h21 ' Make HPRINT destructive
-4010	exec &hadfb
-	c$ = inkey$
+4010	c$ = inkey$
+	if c$ = "" then
+		goto 4010
+	end if
 	c = asc(c$)
 	if c >= asc("A") and len(g$) < 5 then
 		g$ = g$ + c$
@@ -176,10 +178,10 @@
 	if c = 8 and n > 0 then	' backspace
 		n = n - 1
 		g$ = left$(g$, n)
-		hprint (lm + n, 0), " "
+		hprint (lm + n, 0), "  "
 	end if
 	if c = 13 then		' enter
-		hprint (lm, 0), "     "
+		hprint (lm, 0), "      "
 		poke &hf015, &haa ' Make HPRINT nondestructive
 		return
 	end if
