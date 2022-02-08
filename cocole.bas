@@ -17,9 +17,6 @@
 	palette 4, 7	' 4 grey
 	palette 5, 31	' 5 cyan
 
-	' X position of input field
-	lm = 17
-
 	' Clear screen
 10	hcls 0
 
@@ -165,13 +162,25 @@
 
 	' Handle string input
 4000	g$ = ""
+	lm = 17
 	poke &hf015, &h21 ' Make HPRINT destructive
+	palette 7, 0
+	hcolor 7
+	hprint (lm, 0), chr$(127)
+	hcolor 5
+	t = 0
 4010	c$ = inkey$
+	t = (t + 1) and &hff	' blink cursor
+	if (t and 16) > 0 then
+		palette 7, 0
+	else
+		palette 7, 31
+	end if
 	if c$ = "" then
 		goto 4010
 	end if
 	c = asc(c$)
-	if c >= asc("A") and len(g$) < 5 then
+	if c >= asc("A") and c <= asc("Z") and len(g$) < 5 then
 		g$ = g$ + c$
 	end if
 	n = len(g$)
@@ -187,10 +196,14 @@
 	end if
 	if len(g$) > 0 then
 		hprint (lm, 0), g$
+		hcolor 7
+		hprint (lm + n, 0), chr$(127)
+		hcolor 5
 	end if
 	goto 4010
 
 	' Play again?
 5000 	hprint (6, 23), "Press any key to play again"
 	exec &hadfb
+	c$ = inkey$
 	return
