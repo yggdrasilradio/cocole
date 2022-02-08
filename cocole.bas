@@ -14,9 +14,8 @@
 	palette 4, 7	' 4 grey
 	palette 5, 31	' 5 cyan
 
-	' Get a blank character row
-	hbuff 1, 1280
-	hget (0, 0)-(300, 7), 1
+	' X position of input field
+	lm = 17
 
 	' Clear screen
 10	hcls 0
@@ -55,10 +54,10 @@
 
 	' Get guess
 	g = 1
-60	gosub 6000
+60	gosub 4000
 
 	' Clear error line
-	palette 6, 0
+	palette 6, 0 ' black
 
 	' Validate guess
 	if len(g$) <> 5 then
@@ -67,8 +66,11 @@
 		gosub 2000
 	end if
 	if m$ <> "" then
-		palette 6, 31 'cyan
+
+		' Show error line
+		palette 6, 31 ' cyan
 		goto 60
+
 	end if
 
 	' Evaluate guess
@@ -94,6 +96,7 @@
 		hline (x * 8 - 2, y * 8 - 2)-(x * 8 + 8, y * 8 + 8), pset, bf
 		hcolor 0
 		hprint (x, y), c1$
+
 	next i
 	hcolor 5 ' cyan
 
@@ -155,20 +158,10 @@
 	m$ = "Invalid"
 	return
 
-	' Play again?
-5000	lm = 17
-	i = lm * 8
-	hput (i, 0) -(i + (6 * 8), 7), 1, pset
- 	hprint (6, 23), "Press any key to play again"
-	exec &hadfb
-	return
-
 	' Handle string input
-6000	g$ = ""
-	lm = 17
-	i = lm * 8
-	hput (i, 0) -(i + (6 * 8), 7), 1, pset
-6010	exec &Hadfb
+4000	g$ = ""
+	poke &hf015, &h21 ' Make HPRINT destructive
+4010	exec &hadfb
 	c$ = inkey$
 	c = asc(c$)
 	if c >= asc("A") and len(g$) < 5 then
@@ -178,14 +171,19 @@
 	if c = 8 and n > 0 then	' backspace
 		n = n - 1
 		g$ = left$(g$, n)
-		i = (lm + n) * 8
-		hput (i, 0)-(i + 8, 7), 1, pset
+		hprint (lm + n, 0), " "
 	end if
 	if c = 13 then		' enter
+		hprint (lm, 0), "     "
+		poke &hf015, &haa ' Make HPRINT nondestructive
 		return
 	end if
-	i = lm * 8 + n 
 	if len(g$) > 0 then
 		hprint (lm, 0), g$
 	end if
-	goto 6010
+	goto 4010
+
+	' Play again?
+5000 	hprint (6, 23), "Press any key to play again"
+	exec &hadfb
+	return
