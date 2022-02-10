@@ -21,8 +21,10 @@
 10	hcls 0
 
 	' Title
-	hcolor 5 ' cyan
+	hcolor 1 ' white
 	hprint (0, 0), "COCOdle"
+	hcolor 5 ' cyan
+	hprint (27, 0), "by Rick Adams"
 
 	' Seed the random number generator
 	r = rnd(-timer)
@@ -63,7 +65,7 @@
 	if m$ <> "" then
 
 		' Error beep
-		sound 10, 1
+		sound 1, 2
 		goto 60
 
 	end if
@@ -167,12 +169,14 @@
 
 	' Handle string input
 4000	g$ = ""
-	lm = 17
 	poke &hf015, &h21 ' Make HPRINT destructive
+	for i = 15 to 23 step 2
+		hprint (i, 5 + (g * 2)), " "
+	next i
 	palette 7, 0
-	hcolor 7
-	hprint (lm, 0), chr$(127)
-	hcolor 5
+	hcolor 7 ' flash
+	hprint (15, 5 + (g * 2)), chr$(127) ' initial cursor
+	hcolor 5 ' cyan
 	t = 0
 4010	c$ = inkey$
 	t = (t + 1) and &hff	' blink cursor
@@ -189,21 +193,26 @@
 		g$ = g$ + c$
 	end if
 	n = len(g$)
+	n2 = n * 2
+	r = g * 2 + 5
 	if c = 8 and n > 0 then	' backspace
 		n = n - 1
+		n2 = n2 - 2
 		g$ = left$(g$, n)
-		hprint (lm + n, 0), "  "
+		hprint (15 + n2, r), " "
+		hprint (17 + n2, r), " "
 	end if
 	if c = 13 then		' enter
-		hprint (lm, 0), "      "
 		poke &hf015, &haa ' Make HPRINT nondestructive
 		return
 	end if
-	if len(g$) > 0 then
-		hprint (lm, 0), g$
-		hcolor 7
-		hprint (lm + n, 0), chr$(127)
-		hcolor 5
+	if n > 0 then
+		hprint (13 + n2, r), right$(g$, 1)
+	end if
+	if n < 5 then
+		hcolor 7 'flash
+		hprint (15 + n2, r), chr$(127) ' cursor
+		hcolor 5 ' cyan
 	end if
 	goto 4010
 
