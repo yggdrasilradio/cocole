@@ -41,7 +41,6 @@
 	' Alphabet guide
 	hcolor 4 ' grey
 	hprint (6, 3), "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	hcolor 5 ' cyan
 
 	' Draw word grid
 	hcolor 1
@@ -176,7 +175,6 @@
 	palette 7, 0
 	hcolor 7 ' flash
 	hprint (15, 5 + (g * 2)), chr$(127) ' initial cursor
-	hcolor 5 ' cyan
 	t = 0
 4010	c$ = inkey$
 	t = (t + 1) and &hff	' blink cursor
@@ -207,12 +205,12 @@
 		return
 	end if
 	if n > 0 then
+		hcolor 5 ' cyan
 		hprint (13 + n2, r), right$(g$, 1)
 	end if
 	if n < 5 then
-		hcolor 7 'flash
+		hcolor 7 ' flash
 		hprint (15 + n2, r), chr$(127) ' cursor
-		hcolor 5 ' cyan
 	end if
 	goto 4010
 
