@@ -201,6 +201,9 @@
 		hprint (17 + n2, r), " "
 	end if
 	if c = 13 then		' enter
+		for i = 15 to 23 step 2
+			hprint (i, 5 + (g * 2)), " "
+		next i
 		poke &hf015, &haa ' Make HPRINT nondestructive
 		return
 	end if
