@@ -70,18 +70,20 @@
 	end if
 
 	' Evaluate guess
+	s$ = w$
 	for i = 1 to 5
 
 		' Which color?
 		c1$ = mid$(g$, i, 1)
 		c = 4 ' grey
 		for j = 1 to 5
-			c2$ = mid$(w$, j, 1)
+			c2$ = mid$(s$, j, 1)
 			if c2$ = c1$ and i = j then
 				c = 2 ' green
 			end if
 			if c2$ = c1$ and i <> j and c <> 2 then
 				c = 3 ' yellow
+				mid$(s$, j) = " "
 			end if
 		next j
 
