@@ -37,7 +37,6 @@
 	get #1, r
 	w$ = r$
 	close 1
-	w$ = "ROUTE"
 
 	' Alphabet guide
 	hcolor 4 ' grey
