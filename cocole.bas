@@ -37,6 +37,7 @@
 	get #1, r
 	w$ = r$
 	close 1
+	w$ = "ROUTE"
 
 	' Alphabet guide
 	hcolor 4 ' grey
@@ -70,18 +71,19 @@
 	end if
 
 	' Evaluate guess
-	s$ = w$
 	for i = 1 to 5
 
 		' Which color?
-		c1$ = mid$(g$, i, 1)
+		c$ = mid$(g$, i, 1)
 		c = 4 ' grey
+		s$ = w$
 		for j = 1 to 5
+			c1$ = mid$(w$, j, 1)
 			c2$ = mid$(s$, j, 1)
-			if c2$ = c1$ and i = j then
+			if c1$ = c$ and i = j then
 				c = 2 ' green
 			end if
-			if c2$ = c1$ and i <> j and c <> 2 then
+			if c2$ = c$ and i <> j and c <> 2 then
 				c = 3 ' yellow
 				mid$(s$, j) = " "
 			end if
@@ -93,7 +95,7 @@
 		hcolor c
 		hline (x * 8 - 2, y * 8 - 2)-(x * 8 + 8, y * 8 + 8), pset, bf
 		hcolor 0
-		hprint (x, y), c1$
+		hprint (x, y), c$
 
 		' Update alphabet guide
 		poke &hf015, &h21 ' Make HPRINT destructive
