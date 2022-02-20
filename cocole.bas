@@ -99,10 +99,10 @@
 		' Update alphabet guide
 		poke &hf015, &h21 ' Make HPRINT destructive
 		if c = 4 then
-			hprint (6 + asc(c1$) - asc("A"), 3), " "
+			hprint (6 + asc(c$) - asc("A"), 3), " "
 		else
 			hcolor 1 ' white
-			hprint (6 + asc(c1$) - asc("A"), 3), c1$ 
+			hprint (6 + asc(c$) - asc("A"), 3), c$ 
 		end if
 		poke &hf015, &haa ' Make HPRINT nondestructive
 
