@@ -1,5 +1,5 @@
 
-	' COCODLE Wordle clone by Rick Adams http://github.com/yggdrasilradio/cocole
+	' COCODLE Coco3 Wordle port by Rick Adams http://github.com/yggdrasilradio/cocole
 
 	' Reset machine on BREAK
 	pclear 1
@@ -30,6 +30,7 @@
 	r = rnd(-timer)
 
 	' Choose word
+	poke &hffd8, 0 ' slow down CPU (who am I kidding, nobody's gonna use this with actual disk drives)
 	open "R", #1, "GUESS.TXT", 5
 	field #1, 5 as r$
 	n = lof(1)
@@ -37,6 +38,7 @@
 	get #1, r
 	w$ = r$
 	close 1
+	poke &hffd9, 0 ' speed up CPU
 
 	' Alphabet guide
 	hcolor 4 ' grey
@@ -49,10 +51,10 @@
 			hline (x * 8 - 3, y * 8 - 3)-(x * 8 + 9, y * 8 + 9), pset, b
 		next x
 	next y
-	hcolor 5
 
 	' Get guess
 	g = 1
+	hcolor 5
 60	gosub 4000
 
 	' Validate guess
@@ -99,15 +101,16 @@
 
 		' Update alphabet guide
 		poke &hf015, &h21 ' Make HPRINT destructive
-		if c = 4 then
-			hprint (6 + asc(c$) - asc("A"), 3), " "
-		else
+		if instr(w$, c$) > 0 then
 			hcolor 1 ' white
 			hprint (6 + asc(c$) - asc("A"), 3), c$ 
+		else
+			hprint (6 + asc(c$) - asc("A"), 3), " "
 		end if
 		poke &hf015, &haa ' Make HPRINT nondestructive
 
 	next i
+
 	hcolor 5 ' cyan
 
 	' Did the user win yet?
@@ -120,7 +123,7 @@
 
 	' Did the user lose yet?
 	if g = 6 then
-		m$ = "The word was " + w$ ' 13 + 5 = 18
+		m$ = "The word was " + w$
 		hprint (10, 21), m$
 		gosub 5000
 		goto 10
@@ -204,7 +207,7 @@
 		hprint (15 + n2, r), " "
 		hprint (17 + n2, r), " "
 	end if
-	if c = 13 then		' enter
+	if c = 13 then ' enter
 		for i = 15 to 23 step 2
 			hprint (i, 5 + (g * 2)), " "
 		next i
@@ -213,7 +216,7 @@
 	end if
 	if n > 0 then
 		hcolor 5 ' cyan
-		hprint (13 + n2, r), right$(g$, 1)
+		hprint (13 + n2, r), right$(g$, 1) ' echo character
 	end if
 	if n < 5 then
 		hcolor 7 ' flash
