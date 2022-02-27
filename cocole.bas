@@ -164,9 +164,9 @@
 		lo = r + 1
 	end if
 	if g$ < r$ then
-		hi = r
+		hi = r - 1
 	end if
-	if lo <> hi then
+	if lo <= hi then
 		goto 3010
 	end if
 	close 1
