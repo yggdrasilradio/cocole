@@ -1,5 +1,6 @@
 
-	' COCODLE Coco3 Wordle port by Rick Adams http://github.com/yggdrasilradio/cocole
+	' COCODLE Coco3 Wordle port by Rick Adams
+	' http://github.com/yggdrasilradio/cocole
 
 	' Reset machine on BREAK
 	pclear 1
@@ -30,7 +31,7 @@
 	r = rnd(-timer)
 
 	' Choose word
-	poke &hffd8, 0 ' slow down CPU (who am I kidding, nobody's gonna use this with actual disk drives)
+	poke &hffd8, 0 ' slow down CPU for disk IO
 	open "R", #1, "GUESS.TXT", 5
 	field #1, 5 as r$
 	n = lof(1)
@@ -47,8 +48,10 @@
 	' Draw word grid
 	hcolor 1
 	for y = 7 to 17 step 2
+		y8 = y * 8
 		for x = 15 to 23 step 2
-			hline (x * 8 - 3, y * 8 - 3)-(x * 8 + 9, y * 8 + 9), pset, b
+			x8 = x * 8
+			hline (x8 - 3, y8 - 3)-(x8 + 9, y8 + 9), pset, b
 		next x
 	next y
 
@@ -71,27 +74,39 @@
 
 	end if
 
-	' Evaluate guess
+	g2$ = g$
 	s$ = w$
-	for i = 1 to 5
 
-		' Which color?
-		c$ = mid$(g$, i, 1)
-		c = 4 ' grey
+	' Right letter, right position
+	r$ = "44444" ' all grey
+	for i = 1 to 5
+		c1$ = mid$(g$, i, 1)
+		c2$ = mid$(s$, i, 1)
+		if c1$ = c2$ then
+			mid$(r$, i, 1) = "2" ' green
+			mid$(g$, i, 1) = "."
+			mid$(s$, i, 1) = " "
+		end if
+	next i
+
+	' Right letter, wrong position
+	for i = 1 to 5
+		c1$ = mid$(g$, i, 1)
 		for j = 1 to 5
-			c1$ = mid$(w$, j, 1)
 			c2$ = mid$(s$, j, 1)
-			if c1$ = c$ and i = j then
-				c = 2 ' green
-				mid$(s$, j) = " "
-			end if
-			if c2$ = c$ and i <> j and c <> 2 then
-				c = 3 ' yellow
-				mid$(s$, j) = " "
+			if c1$ = c2$ then
+				mid$(r$, i, 1) = "3" ' yellow
+				mid$(g$, i, 1) = "." ' ???
+				mid$(s$, j, 1) = " "
 			end if
 		next j
+	next i
+
+90	for i = 1 to 5
 
 		' Draw character in grid cell
+		c$ = mid$(g2$, i, 1)
+		c = val(mid$(r$, i, 1))
 		x = i * 2 + 13
 		y = g * 2 + 5
 		hcolor c
@@ -101,7 +116,7 @@
 
 		' Update alphabet guide
 		poke &hf015, &h21 ' Make HPRINT destructive
-		if instr(w$, c$) > 0 then
+95		if instr(w$, c$) > 0 then
 			hcolor 1 ' white
 			hprint (6 + asc(c$) - asc("A"), 3), c$ 
 		else
@@ -114,7 +129,7 @@
 	hcolor 5 ' cyan
 
 	' Did the user win yet?
-	if g$ = w$ then
+	if g2$ = w$ then
 		m$ = "You won in" + str$(g) + " guesses!"
 		hprint (10, 21), m$
 		gosub 5000
@@ -138,7 +153,7 @@
 	exec &h8c1b
 
 	' Validate guess
-2000	poke &hffd8, 0 ' slow down CPU (who am I kidding, nobody's gonna use this with actual disk drives)
+2000	poke &hffd8, 0 ' slow down CPU for disk IO
 	f$ = "GUESS.TXT"
 	gosub 3000
 	if m$ <> "" then
