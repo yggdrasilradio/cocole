@@ -31,7 +31,7 @@
 	r = rnd(-timer)
 
 	' Choose word
-	poke &hffd8, 0 ' slow down CPU for disk IO
+	'poke &hffd8, 0 ' slow down CPU for disk IO
 	open "R", #1, "GUESS.TXT", 5
 	field #1, 5 as r$
 	n = lof(1)
@@ -74,38 +74,40 @@
 
 	end if
 
+	' Evaluate guess
 	g2$ = g$
-	s$ = w$
+	w2$ = w$
+	r$ = "44444" ' all grey
 
 	' Right letter, right position
-	r$ = "44444" ' all grey
 	for i = 1 to 5
-		c1$ = mid$(g$, i, 1)
-		c2$ = mid$(s$, i, 1)
+		c1$ = mid$(g2$, i, 1)
+		c2$ = mid$(w2$, i, 1)
 		if c1$ = c2$ then
 			mid$(r$, i, 1) = "2" ' green
-			mid$(g$, i, 1) = "."
-			mid$(s$, i, 1) = " "
+			mid$(g2$, i, 1) = "."
+			mid$(w2$, i, 1) = " "
 		end if
-	next i
+	next
 
 	' Right letter, wrong position
 	for i = 1 to 5
-		c1$ = mid$(g$, i, 1)
+		c1$ = mid$(g2$, i, 1)
 		for j = 1 to 5
-			c2$ = mid$(s$, j, 1)
+			c2$ = mid$(w2$, j, 1)
 			if c1$ = c2$ then
 				mid$(r$, i, 1) = "3" ' yellow
-				mid$(g$, i, 1) = "." ' ???
-				mid$(s$, j, 1) = " "
+				mid$(g2$, i, 1) = "."
+				mid$(w2$, j, 1) = " "
 			end if
-		next j
-	next i
+		next
+	next
 
+	' Update display
 90	for i = 1 to 5
 
 		' Draw character in grid cell
-		c$ = mid$(g2$, i, 1)
+		c$ = mid$(g$, i, 1)
 		c = val(mid$(r$, i, 1))
 		x = i * 2 + 13
 		y = g * 2 + 5
@@ -124,12 +126,12 @@
 		end if
 		poke &hf015, &haa ' Make HPRINT nondestructive
 
-	next i
+	next
 
 	hcolor 5 ' cyan
 
 	' Did the user win yet?
-	if g2$ = w$ then
+	if g$ = w$ then
 		m$ = "You won in" + str$(g) + " guesses!"
 		hprint (10, 21), m$
 		gosub 5000
@@ -153,7 +155,7 @@
 	exec &h8c1b
 
 	' Validate guess
-2000	poke &hffd8, 0 ' slow down CPU for disk IO
+2000	'poke &hffd8, 0 ' slow down CPU for disk IO
 	f$ = "GUESS.TXT"
 	gosub 3000
 	if m$ <> "" then
