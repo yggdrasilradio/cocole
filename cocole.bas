@@ -111,8 +111,10 @@
 		c = val(mid$(r$, i, 1))
 		x = i * 2 + 13
 		y = g * 2 + 5
+		x8 = x * 8
+		y8 = y * 8
 		hcolor c
-		hline (x * 8 - 2, y * 8 - 2)-(x * 8 + 8, y * 8 + 8), pset, bf
+		hline (x8 - 2, y8 - 2)-(x8 + 8, y8 + 8), pset, bf
 		hcolor 0
 		hprint (x, y), c$
 
