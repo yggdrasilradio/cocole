@@ -13,7 +13,7 @@
 	hscreen 2
 	palette 0, 0  	' 0 black
 	palette 1, 63	' 1 white
-	palette 2, 22	' 2 green
+	palette 2, 16 	' 2 green
 	palette 3, 54	' 3 yellow
 	palette 4, 7	' 4 grey
 	palette 5, 31	' 5 cyan
