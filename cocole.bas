@@ -22,9 +22,8 @@
 10	hcls 0
 
 	' Title
-	hcolor 1 ' white
-	hprint (0, 0), "COCOdle"
 	hcolor 5 ' cyan
+	hprint (0, 0), "COCOdle"
 	hprint (27, 0), "by Rick Adams"
 
 	' Seed the random number generator
